@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+
+  go_app:
+    build: .
+    ports:
+      - "${GO_PORT}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${GO_DB_HOST}
+      DB_PORT: ${GO_DB_PORT}
+      DB_USER: ${GO_DB_USER}
+      DB_PASSWORD: ${GO_DB_PASSWORD}
+      DB_NAME: ${GO_DB_NAME}
+
+volumes:
+  pgdata:
