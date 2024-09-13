@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
-    container_name: my_postgres
+    container_name: postgresCn
     ports:
       - "5432:5432"
     environment:
@@ -30,6 +30,8 @@ services:
       DB_USER: ${GO_DB_USER}
       DB_PASSWORD: ${GO_DB_PASSWORD}
       DB_NAME: ${GO_DB_NAME}
+    volumes:
+      - .:/app  # Mount the current directory to allow for live reloading with Air
 
 volumes:
-  pgdata:
+  pgdata:   

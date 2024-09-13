@@ -1,0 +1,21 @@
+# .air.toml
+
+# Watch configuration
+[watch]
+include = ["."]
+exclude = ["vendor", "tmp", "logs"]
+
+# File extensions to watch
+extensions = ["go"]
+
+# Commands to run on file changes
+[build]
+cmd = "go build -o /app/tmp/main -buildvcs=false ."
+include = ["."]
+exclude = ["vendor"]
+
+# Command to start the app
+[[program]]
+name = "app"
+path = "/app/tmp/main"
+    

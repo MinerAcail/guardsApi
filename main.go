@@ -1,44 +1,35 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	_ "github.com/lib/pq"
 	"log"
-	"os"
-	"github.com/joho/godotenv"
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/mineracail/guardApi/database"
+	"github.com/mineracail/guardApi/resolvers"
 )
 
 func main() {
-	// Load environment variables from .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	r := chi.NewRouter()
+	db := database.ConnectDB()
 
-	// Get environment variables
-	user := os.Getenv("GO_DB_USER")
-	password := os.Getenv("GO_DB_PASSWORD")
-	dbname := os.Getenv("GO_DB_NAME")
-	host := os.Getenv("GO_DB_HOST")
-	port := os.Getenv("GO_DB_PORT")
+	// Define routes for CRUD operations
+	r.Post("/students", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.CreateStudent(db, w, r)
+	})
+	r.Get("/students/{id}", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.GetStudentByID(db, w, r)
+	})
+	r.Get("/students/all", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.GetAllStudents(db, w, r)
+	})
+	r.Put("/students/{id}", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.UpdateStudentByID(db, w, r)	
+	})
+	r.Delete("/`students`/{id}", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.DeleteStudentByID(db, w, r)
+	})
 
-	// Define the connection string with service name `postgres`
-	connStr := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", user, password, dbname, host, port)
-
-	// Open a connection to the database
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	// Test the connection
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Successfully connected to the database!")
+	log.Println("Starting server on http://localhost:8080")
+	http.ListenAndServe(":8080", r)
 }
-	
