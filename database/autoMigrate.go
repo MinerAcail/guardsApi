@@ -14,7 +14,8 @@ func AutoMigrate(db *gorm.DB) {
 		&models.Student{},
 		&models.Staff{},
 		&models.Calendar{},
-			&models.HomeArrival{},
+		&models.HomeArrival{},
+		&models.SchoolArrival{},
 		&models.Parent{},
 	)
 	if err != nil {

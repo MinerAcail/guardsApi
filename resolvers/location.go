@@ -67,11 +67,7 @@ func GetConfirmedArrivalsByParent(db *gorm.DB, w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// If no arrivals were found, respond with a suitable message
-	if len(confirmedArrivals) == 0 {
-		handleError(w, http.StatusNotFound, "No confirmed arrivals found for today")
-		return
-	}
+
 
 	// Respond with the list of confirmed arrivals
 	respondJSON(w, http.StatusOK, confirmedArrivals)
@@ -87,16 +83,27 @@ func GetAllConfirmedArrivals(db *gorm.DB, w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// If no arrivals were found, respond with a suitable message
-	if len(confirmedArrivals) == 0 {
-		handleError(w, http.StatusNotFound, "No confirmed arrivals found for today")
-		return
-	}
 
 	// Respond with the list of confirmed arrivals
 	respondJSON(w, http.StatusOK, confirmedArrivals)
 }
 
+func GetAllConfirmedArrivalsStaff(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	// Get the current date
+	currentDate := time.Now().Format("2006-01-02") // Format to YYYY-MM-DD
+
+	// Query the database to retrieve all confirmed HomeArrival records for today's date
+	var confirmedArrivals []models.SchoolArrival
+	if err := db.Where("DATE(created_at) = ?", currentDate).Find(&confirmedArrivals).Error; err != nil {
+		handleError(w, http.StatusInternalServerError, "Error retrieving confirmed arrivals: "+err.Error())
+		return
+	}
+
+	
+
+	// Respond with the list of confirmed arrivals
+	respondJSON(w, http.StatusOK, confirmedArrivals)
+}
 // GetAllHomeArrivalsForThatWeek retrieves all home arrivals for the current week.
 func GetAllHomeArrivalsForThatWeek(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	// Get the current time and calculate the start of the week (e.g., Monday)
