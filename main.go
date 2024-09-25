@@ -6,30 +6,27 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mineracail/guardApi/database"
-	"github.com/mineracail/guardApi/resolvers"
+
+	"github.com/mineracail/guardApi/router"
 )
 
 func main() {
 	r := chi.NewRouter()
+	// Apply the middleware to all routes
+	//r.Use(middleware.Middleware)
+	
+
 	db := database.ConnectDB()
+	// Migrate the schema	
+	database.AutoMigrate(db)
 
 	// Define routes for CRUD operations
-	r.Post("/students", func(w http.ResponseWriter, r *http.Request) {
-		resolvers.CreateStudent(db, w, r)
-	})
-	r.Get("/students/{id}", func(w http.ResponseWriter, r *http.Request) {
-		resolvers.GetStudentByID(db, w, r)
-	})
-	r.Get("/students/all", func(w http.ResponseWriter, r *http.Request) {
-		resolvers.GetAllStudents(db, w, r)
-	})
-	r.Put("/students/{id}", func(w http.ResponseWriter, r *http.Request) {
-		resolvers.UpdateStudentByID(db, w, r)	
-	})
-	r.Delete("/`students`/{id}", func(w http.ResponseWriter, r *http.Request) {
-		resolvers.DeleteStudentByID(db, w, r)
-	})
-
+	router.StudentRoute(db,r)
+	router.StaffRoute(db,r)
+	router.CalendarRoute(db,r)	
+	router.ParentRoute(db,r)	
+	router.LocationRoute(db,r)	
+	
 	log.Println("Starting server on http://localhost:8080")
 	http.ListenAndServe(":8080", r)
 }

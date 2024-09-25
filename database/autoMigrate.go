@@ -7,10 +7,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func AutoMigrate(	) {
+func AutoMigrate(db *gorm.DB) {
 
 	// Migrate the schema
-	err := db.AutoMigrate(&models.Student{})
+	err := db.AutoMigrate(
+		&models.Student{},
+		&models.Staff{},
+		&models.Calendar{},
+			&models.HomeArrival{},
+		&models.Parent{},
+	)
 	if err != nil {
 		log.Fatal("Error migrating schema:", err)
 	}

@@ -1,27 +1,27 @@
-	package database		
+package database
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"	
 	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // ConnectDB establishes a connection to the database
 func ConnectDB() *gorm.DB {
 	// Load environment variables from .env file
 	err := godotenv.Load()
-	if err != nil {		
+	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
 	// Get environment variables
 	user := os.Getenv("GO_DB_USER")
 	password := os.Getenv("GO_DB_PASSWORD")
-	dbname := os.Getenv("GO_DB_NAME")	
+	dbname := os.Getenv("GO_DB_NAME")
 	host := os.Getenv("GO_DB_HOST")
 	port := os.Getenv("GO_DB_PORT")
 
@@ -39,15 +39,16 @@ func ConnectDB() *gorm.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer func() {
-	// 	if err := sqlDB.Close(); err != nil {
-	// 		log.Fatal("Error closing the database connection:", err)
-	// 	}		
-	// }()
 
 	err = sqlDB.Ping()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// Enable uuid extension in PostgreSQL
+	err = db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"").Error
+	if err != nil {
+		log.Fatal("Failed to create uuid extension:", err)
 	}
 
 	fmt.Println("Successfully connected to the database using GORM!")
