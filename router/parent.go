@@ -25,6 +25,9 @@ func ParentRoute(db *gorm.DB, r *chi.Mux) {
 	r.Put("/parents/{id}", func(w http.ResponseWriter, r *http.Request) {
 		resolvers.UpdateParentByID(db, w, r)
 	})
+	r.Put("/addsupervise", func(w http.ResponseWriter, r *http.Request) {
+		resolvers.AddSupervise(db, w, r)
+	})
 	r.Delete("/parents/{id}", func(w http.ResponseWriter, r *http.Request) {
 		resolvers.DeleteParentByID(db, w, r)
 	})

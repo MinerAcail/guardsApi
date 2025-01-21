@@ -26,6 +26,7 @@ func main() {
 	router.CalendarRoute(db,r)	
 	router.ParentRoute(db,r)	
 	router.LocationRoute(db,r)	
+	router.MessageRoute(db,r)	
 	
 	log.Println("Starting server on http://localhost:8080")
 	http.ListenAndServe(":8080", r)

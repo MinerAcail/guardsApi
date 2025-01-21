@@ -17,6 +17,7 @@ func AutoMigrate(db *gorm.DB) {
 		&models.HomeArrival{},
 		&models.SchoolArrival{},
 		&models.Parent{},
+		&models.Message{},
 	)
 	if err != nil {
 		log.Fatal("Error migrating schema:", err)

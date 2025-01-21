@@ -14,6 +14,7 @@ type Parent struct {
 	FirstName       string         `json:"firstName"`
 	LastName        string         `json:"lastName"`
 	Email           string         `json:"email"`
+	//  Email string    `gorm:"unique;not null"`
 	PhoneNumber     string         `json:"phoneNumber"`
 	DateOfBirth     string         `json:"dateOfBirth"`
 	Address         string         `json:"address"`

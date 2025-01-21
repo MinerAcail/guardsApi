@@ -9,7 +9,7 @@ RUN apk add --no-cache git
 
 # Install Air
 # RUN go install github.com/cosmtrek/air@latest no more used in the docs
-RUN go install github.com/air-verse/air@latest
+RUN go install github.com/air-verse/air@v1.52.3
 
 
 # Copy the Go Modules manifests
